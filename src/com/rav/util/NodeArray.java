@@ -20,7 +20,7 @@ public class NodeArray {
         nodes = new Node[x][y];
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {                
-                nodes[i][j] = Node.initializeRandom(weightCount);
+                nodes[i][j] = Node.initializeRandom(weightCount,i,j);
             }
         }
     }

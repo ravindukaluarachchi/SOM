@@ -21,12 +21,14 @@ public class Node {
         weights = new ArrayList<>();
     }
     
-    public static Node initializeRandom(int weightCount){
+    public static Node initializeRandom(int weightCount,int x,int y){
         Node n = new Node();
         Random r = new Random();
         for (int i = 0; i < weightCount; i++) {
             n.weights.add(r.nextInt(256) );
         }
+        n.x = x;
+        n.y = y;
         return n;
     }
     
@@ -47,6 +49,10 @@ public class Node {
         return n;
     }
     
+    public void setWeight(int i,int weight){
+        weights.set(i,weight);
+    }
+    
     public Integer getWeight(int i){
         return weights.get(i);
     }
@@ -54,4 +60,26 @@ public class Node {
     public Integer getWeightCount(){
         return weights.size();
     }
+
+    public Integer getX() {
+        return x;
+    }
+
+    public void setX(Integer x) {
+        this.x = x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public void setY(Integer y) {
+        this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" + "weights=" + weights + ", x=" + x + ", y=" + y + '}';
+    }
+    
 }

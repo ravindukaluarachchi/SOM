@@ -5,10 +5,14 @@
  */
 package com.rav.view;
 
+import com.rav.algorithm.SOMAlgorithm;
 import com.rav.util.Node;
 import com.rav.util.NodeArray;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -32,9 +36,11 @@ public class GUI {
     private Double nodeHeight;
     private Double nodeWidth;
     private ArrayList<Node> inputs;
-
+    Stage primaryStage;
     public GUI(Stage primaryStage, NodeArray nodeArray, ArrayList<Node> inputs) throws Exception {
         this.nodeArray = nodeArray;
+        this.inputs = inputs;
+        this.primaryStage = primaryStage;
         primaryStage.setTitle("SOM");
         primaryStage.setWidth(800);
         primaryStage.setHeight(600);
@@ -55,6 +61,7 @@ public class GUI {
         Button btnTrain = new Button("Train SOM");
         btnTrain.setOnAction((event) -> {
             trainSOM();
+            draw();
         });
 
         Button btnQuit = new Button("Quit");
@@ -74,17 +81,35 @@ public class GUI {
         nodeHeight = canvas.getHeight() / nodeArray.getyLength();
         draw();
         drawInputs(inputs);
+
+    }
+
+    public void refresh(Integer iteration) {
+        try {
+            Thread.sleep(10);
+            Platform.runLater(() -> {
+                draw();
+                primaryStage.setTitle("SOM : " + iteration);
+                
+            });
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void trainSOM() {
+        new Thread(() -> {
+            new SOMAlgorithm().train(nodeArray, inputs, this);
+        }).start();
+
     }
 
     private void drawInputs(ArrayList<Node> inputs) {
         for (int j = 0; j < inputs.size(); j++) {
             Node n = inputs.get(j);
-            System.out.println(n.getWeight(0) +  " " + n.getWeight(1)+  " " + n.getWeight(2));
+            System.out.println(n.getWeight(0) + " " + n.getWeight(1) + " " + n.getWeight(2));
             gcInput.setFill(Color.rgb(n.getWeight(0), n.getWeight(1), n.getWeight(2)));
-            gcInput.fillRect(j * (gcInput.getCanvas().getWidth() / inputs.size()) , 0, nodeWidth, nodeHeight);
+            gcInput.fillRect(j * (gcInput.getCanvas().getWidth() / inputs.size()), 0, nodeWidth, nodeHeight);
         }
     }
 
