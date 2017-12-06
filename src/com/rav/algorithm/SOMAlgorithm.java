@@ -30,19 +30,32 @@ public class SOMAlgorithm {
         for (int i = 0; i < NO_OF_ITERATIONS; i++) {
             neighbourhoodRadius = INITIAL_RADIUS * Math.exp(-i / TIME_CONSTANT);
             for (Node input : inputs) {
-                
+                Node bmu = getBMU(input);
             }
         }
     }
     
     private Node getBMU(Node input){
         Node bmu = null;
-        double distance = 0;
+        double distance = -1;
         for (int i = 0; i < nodeArray.getxLength(); i++) {
             for (int j = 0; j < nodeArray.getyLength(); j++) {
-                //double euclidianD
+                double euclideanDistance = calculateEuclideanDistance(input, nodeArray.get(i, j));
+                if (euclideanDistance > distance) {
+                    distance = euclideanDistance;
+                    bmu = nodeArray.get(i, j);
+                }
             }
         }
         return bmu;
+    }
+    
+    private double calculateEuclideanDistance(Node node1,Node node2){
+        double distance = 0;
+        for (int i = 0; i < node1.getWeightCount(); i++) {
+            distance += Math.pow(node1.getWeight(i) - node2.getWeight(i), 2);
+        }        
+        distance = Math.sqrt(distance);        
+        return distance;
     }
 }

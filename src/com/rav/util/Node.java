@@ -50,4 +50,8 @@ public class Node {
     public Integer getWeight(int i){
         return weights.get(i);
     }
+    
+    public Integer getWeightCount(){
+        return weights.size();
+    }
 }
