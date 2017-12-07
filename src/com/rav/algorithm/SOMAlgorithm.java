@@ -22,51 +22,47 @@ public class SOMAlgorithm {
     private int NO_OF_ITERATIONS = 500;
     private double INITIAL_RADIUS;
     private double TIME_CONSTANT;
-    private double INITIAL_LEARNING_RATE = 1;
+    private double INITIAL_LEARNING_RATE = 0.07;
 
     private NodeArray nodeArray;
     //private ArrayList<Node> inputs;
 
-    public void train(NodeArray nodeArray, ArrayList<Node> inputs,GUI gui) {
+    public void train(NodeArray nodeArray, ArrayList<Node> inputs, GUI gui) {
         this.nodeArray = nodeArray;
         INITIAL_RADIUS = Math.max(nodeArray.getxLength(), nodeArray.getyLength()) / 2;
         TIME_CONSTANT = NO_OF_ITERATIONS / Math.log(INITIAL_RADIUS);
         double learningRate = INITIAL_LEARNING_RATE;
         double neighbourhoodRadius;
-      //  System.out.println("TIME_CONSTANT : " + TIME_CONSTANT);
         for (int i = 0; i < NO_OF_ITERATIONS; i++) {
             neighbourhoodRadius = INITIAL_RADIUS * Math.exp(-i / TIME_CONSTANT);
-       //     System.out.println("neighbourhoodRadius : " + neighbourhoodRadius);
             for (Node input : inputs) {
                 Node bmu = getBMU(input);
-               // System.out.println( input +" bmu: " + bmu);
                 for (int j = 0; j < nodeArray.getxLength(); j++) {
                     for (int k = 0; k < nodeArray.getyLength(); k++) {
                         Node neighbourNode = nodeArray.get(j, k);
                         double distanceFromBMU = calculateDistance(bmu, neighbourNode);
                         if (distanceFromBMU <= neighbourhoodRadius) {
-                      //  System.out.println(distanceFromBMU + " <=  " +neighbourhoodRadius);
-                            updateWeights(input, neighbourNode, learningRate,distanceFromBMU);
+                            updateWeights(input, neighbourNode, learningRate, neighbourhoodRadius, distanceFromBMU);
                         }
                     }
                 }
             }
-           gui.refresh(i + 1);
-           learningRate = INITIAL_LEARNING_RATE * Math.exp(- i /NO_OF_ITERATIONS);
+            gui.refresh(i + 1);
+            learningRate = INITIAL_LEARNING_RATE * Math.exp(-(double) i / NO_OF_ITERATIONS);
         }
     }
 
-    private void updateWeights(Node input,Node node,double learningRate,double distanceFromBMU ){
-        Double influence = Math.exp( - Math.pow(distanceFromBMU, 2)/(2 * Math.pow(learningRate, 2))) ;
-        //System.out.println(influence + " : " + influence.intValue());
+    private void updateWeights(Node input, Node node, double learningRate, double radius, double distanceFromBMU) {
+        Double distanceFallOff = Math.exp(-Math.pow(distanceFromBMU, 2) / (2 * Math.pow(radius, 2)));
+
         for (int i = 0; i < node.getWeightCount(); i++) {
-            
-            Double newWeight = node.getWeight(i) + influence *  learningRate * (input.getWeight(i) - node.getWeight(i));            
-           // System.out.println(newWeight +  " > " + newWeight.intValue() );
+
+            Double newWeight = node.getWeight(i) + distanceFallOff * learningRate * (input.getWeight(i) - node.getWeight(i));
+
             node.setWeight(i, newWeight.intValue());
         }
     }
-    
+
     private Node getBMU(Node input) {
         Node bmu = null;
         double distance = 9999999;
@@ -90,9 +86,8 @@ public class SOMAlgorithm {
         distance = Math.sqrt(distance);
         return distance;
     }
-    
+
     private double calculateDistance(Node node1, Node node2) {
-        
         return Math.sqrt(Math.pow(node1.getX() - node2.getX(), 2) + Math.pow(node1.getY() - node2.getY(), 2));
     }
 }

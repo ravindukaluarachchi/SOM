@@ -18,11 +18,17 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import som.SOM;
+import static som.SOM.NODE_ARRAY_HEIGHT;
+import static som.SOM.NODE_ARRAY_WIDTH;
+import static som.SOM.NO_OF_WEIGHTS;
 
 /**
  *
@@ -54,23 +60,33 @@ public class GUI {
         gc = canvas.getGraphicsContext2D();
         pane.setCenter(canvas);
 
+        
         Canvas inputCanvas = new Canvas(500, 100);
         gcInput = inputCanvas.getGraphicsContext2D();
-        pane.setBottom(inputCanvas);
+        HBox hb = new HBox(new Label("Inputs : "), inputCanvas);
+        pane.setBottom(hb);
 
         Button btnTrain = new Button("Train SOM");
+        btnTrain.setMinWidth(200);
         btnTrain.setOnAction((event) -> {
             trainSOM();
             draw();
         });
 
+        Button btnReset = new Button("Reset Nodes");
+        btnReset.setMinWidth(200);
+        btnReset.setOnAction((event) -> {
+            this.nodeArray = new NodeArray(SOM.NODE_ARRAY_WIDTH, SOM.NODE_ARRAY_HEIGHT, SOM.NO_OF_WEIGHTS);
+            draw();
+        });
+        
         Button btnQuit = new Button("Quit");
-
+        btnQuit.setMinWidth(200);
         btnQuit.setOnAction((event) -> {
             System.exit(0);
         });
 
-        VBox vb = new VBox(btnTrain, btnQuit);
+        VBox vb = new VBox(btnTrain, btnReset, btnQuit);
         vb.setSpacing(20d);
         pane.setRight(vb);
 
@@ -105,11 +121,12 @@ public class GUI {
     }
 
     private void drawInputs(ArrayList<Node> inputs) {
+        gc.setStroke(Color.BLACK);
         for (int j = 0; j < inputs.size(); j++) {
-            Node n = inputs.get(j);
-            System.out.println(n.getWeight(0) + " " + n.getWeight(1) + " " + n.getWeight(2));
+            Node n = inputs.get(j);            
             gcInput.setFill(Color.rgb(n.getWeight(0), n.getWeight(1), n.getWeight(2)));
             gcInput.fillRect(j * (gcInput.getCanvas().getWidth() / inputs.size()), 0, nodeWidth, nodeHeight);
+            gcInput.strokeRect(j * (gcInput.getCanvas().getWidth() / inputs.size()), 0, nodeWidth, nodeHeight);
         }
     }
 

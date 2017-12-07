@@ -20,9 +20,9 @@ import javafx.stage.Stage;
  */
 public class SOM  extends Application{
     
-    private final int NODE_ARRAY_WIDTH = 40;
-    private final int NODE_ARRAY_HEIGHT = 40;
-    private final int NO_OF_WEIGHTS = 3;
+    public static final int NODE_ARRAY_WIDTH = 40;
+    public static final int NODE_ARRAY_HEIGHT = 40;
+    public static final int NO_OF_WEIGHTS = 3;
     
     private GUI gui;
     private NodeArray nodeArray;
