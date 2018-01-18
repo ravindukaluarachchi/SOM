@@ -30,7 +30,7 @@ public class SOM  extends Application{
             Node.initialize(Color.RED.getRed() ,Color.RED.getGreen(),Color.RED.getBlue()),
             Node.initialize(Color.GREEN.getRed(),Color.GREEN.getGreen(),Color.GREEN.getBlue()),
             Node.initialize(Color.BLUE.getRed(),Color.BLUE.getGreen(),Color.BLUE.getBlue()),
-            Node.initialize(Color.BLACK.getRed(),Color.BLACK.getGreen(),Color.BLACK.getBlue()),
+            Node.initialize(Color.LIGHTGREEN.getRed(),Color.LIGHTGREEN.getGreen(),Color.LIGHTGREEN.getBlue()),
             Node.initialize(Color.YELLOW.getRed(),Color.YELLOW.getGreen(),Color.YELLOW.getBlue()),
             Node.initialize(Color.WHITE.getRed(),Color.WHITE.getGreen(),Color.WHITE.getBlue())
                     
